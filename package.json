@@ -1,0 +1,11 @@
+{
+  "name": "currency-converter-bot",
+  "version": "1.0.0",
+  "private": true,
+  "scripts":{
+    "dev": "wrangler deploy"
+  },
+  "devDependencies":{
+    "wrangler": "^4.0.0"
+  }
+}
