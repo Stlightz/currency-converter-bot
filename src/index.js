@@ -5,6 +5,6 @@ export default{
   }
     const update = await request.json();
     console.log(update);
-    return new Responce ("OK");
+    return new Response ("OK");
   }
 };
