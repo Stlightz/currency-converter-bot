@@ -148,67 +148,97 @@ async function getTracked(chatId, env) {
 async function handleTrack(chatId, text, env) {
   const parts = text.trim().split(/\s+/);
 
-  if (parts.length !== 2) {
+
+  if (parts.length === 1) {
+    const tracked = await getTracked(chatId, env);
+
+    if (tracked.length === 0) {
+      await sendMessage(
+        env.BOT_TOKEN,
+        chatId,
+        `📊 <b>Отслеживаемые валюты</b>\n\nСписок пуст.\n\nДобавить валюту: <code>/track USD</code>`
+      );
+
+      return;
+    }
+
+    let message = `📊 <b>Отслеживаемые валюты</b>\n\n`;
+
+    for (const currency of tracked) {
+      message += `• ${currency}\n`;
+    }
+
     await sendMessage(
       env.BOT_TOKEN,
       chatId,
-      `<b>Использование:</b>\n<code>/track USD</code>`
+      message
     );
 
     return;
   }
 
-  const currency = parts[1].toUpperCase();
 
-  try {
-    const data = await getRates("USD", env);
+  if (parts.length === 2) {
+    const currency = parts[1].toUpperCase();
 
-    if (!(currency in data.conversion_rates)) {
+    try {
+      const data = await getRates("USD", env);
+
+      if (!(currency in data.conversion_rates)) {
+        await sendMessage(
+          env.BOT_TOKEN,
+          chatId,
+          `❌ Валюта <b>${currency}</b> не найдена.`
+        );
+
+        return;
+      }
+
+      const tracked = await getTracked(chatId, env);
+
+      if (tracked.includes(currency)) {
+        await sendMessage(
+          env.BOT_TOKEN,
+          chatId,
+          `ℹ️ <b>${currency}</b> уже отслеживается.`
+        );
+
+        return;
+      }
+
+      tracked.push(currency);
+
+      await env.CURRENCY_KV.put(
+        String(chatId),
+        JSON.stringify(tracked)
+      );
+
       await sendMessage(
         env.BOT_TOKEN,
         chatId,
-        `❌ Валюта <b>${currency}</b> не найдена.`
+        `✓ <b>${currency}</b> добавлен в отслеживание.`
       );
 
-      return;
-    }
+    } catch (error) {
+      console.error("TRACK ERROR:", error);
 
-    const tracked = await getTracked(chatId, env);
-
-    if (tracked.includes(currency)) {
       await sendMessage(
         env.BOT_TOKEN,
         chatId,
-        `ℹ️ <b>${currency}</b> уже отслеживается.`
+        "❌ Не удалось проверить валюту."
       );
-
-      return;
     }
 
-    tracked.push(currency);
-
-    await env.CURRENCY_KV.put(
-      String(chatId),
-      JSON.stringify(tracked)
-    );
-
-    await sendMessage(
-      env.BOT_TOKEN,
-      chatId,
-      `✓ <b>${currency}</b> добавлен в отслеживание.`
-    );
-
-  } catch (error) {
-    console.error(error);
-
-    await sendMessage(
-      env.BOT_TOKEN,
-      chatId,
-      "❌ Не удалось проверить валюту."
-    );
+    return;
   }
-}
 
+  // Неправильное использование
+  await sendMessage(
+    env.BOT_TOKEN,
+    chatId,
+    `<b>Использование:</b>\n<code>/track</code> — список\n<code>/track USD</code> — добавить валюту`
+  );
+}
 async function sendMessage(token, chatId, text) {
   const url =
     `https://api.telegram.org/bot${token}/sendMessage`;
