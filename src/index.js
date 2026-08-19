@@ -149,10 +149,13 @@ async function handleConvert(chatId, text, env) {
     const message = `
 <b>💱 Конвертация</b>
 
-<b>${amount} ${from}</b> ${getCurrencyEmoji(currency)} → <b>${formattedResult} ${getCurrencyEmoji(currency)} ${to}</b>
+${getCurrencyEmoji(from)} <b>${amount} ${from}</b>
+ →
+${getCurrencyEmoji(to)} <b>${formattedResult} ${to}</b>
 
 Курс:
-1 ${from} = ${formattedRate} ${to}
+${getCurrencyEmoji(from)} 1 ${from} =
+${formattedRate} ${to}
 `;
 
     await sendMessage(
@@ -524,9 +527,18 @@ const greeting =
   `<b> Greetings! </b>
   
   <b> C2C Bot - is your main helper in instant currency conversions </b>
+  
 - Helps you track changes on the currency market
 - Reliable currency calculator
-- A useful tool in life and for business`;
+- A useful tool in life and for business
+  
+  <code> Основные команды:
+/convert - ручная конвертация
+/table - обзор мировых валют
+/track <currency> - начать отслеживать курс валюты
+/untrack <currency> - прекратить отслеживать курс валюты
+/unsubscribe - отписаться от рассылок полностью
+/track - отслеживаемые валюты</code>`;
   
 
 export default {
