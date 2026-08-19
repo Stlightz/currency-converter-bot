@@ -1,4 +1,4 @@
-async function sendMessage(token, chatId, text){
+async function sendMessage(token, chatId, text, options = {}){
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
   const response = await fetch(url,{
     method: "POST",
@@ -7,7 +7,8 @@ async function sendMessage(token, chatId, text){
     },
     body: JSON.stringify({
       chat_id: chatId,
-      text: text})
+      text: text
+    ...options})
   });
   if(!response.ok){
     throw new Error(`Telegram API error: ${response.status}`);
@@ -18,7 +19,7 @@ async function sendMessage(token, chatId, text){
 const greeting = 
   `<b> Greetings! </b>
   
-  <b> C2C Bot - is your main helper in instantaneous currency convertations </b>
+  <b> C2C Bot - is your main helper in instant currency conversions </b>
 - Helps you track changes on the currency market
 - Reliable currency calculator
 - A useful tool in life and for business`;
