@@ -1,4 +1,9 @@
 {
+"triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  }
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "currency-converter-bot",
   "main": "src/index.js",
@@ -8,9 +13,5 @@
 "binding" : "CURRENCY_KV",
 "id" : "8aabfff897404a26bc1f363047774f48"
 }]
-"triggers": {
-    "crons": [
-      "0 * * * *"
-    ]
-  }
+
 }
