@@ -31,7 +31,7 @@ export default{
       return new Response("OK");
     }
     if(text === "/start"){
-      await sendMessage(env.BOT_TOKEN, chatId, "Привет! Я пидорас");
+      await sendMessage(env.BOT_TOKEN, chatId, "Прив");
     }
     return new Response ("OK");
   }
