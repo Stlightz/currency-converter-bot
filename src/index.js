@@ -150,32 +150,49 @@ async function handleTrack(chatId, text, env) {
 
 
   if (parts.length === 1) {
-    const tracked = await getTracked(chatId, env);
+    try {
+      const tracked = await getTracked(chatId, env);
 
-    if (tracked.length === 0) {
+      if (tracked.length === 0) {
+        await sendMessage(
+          env.BOT_TOKEN,
+          chatId,
+          `📊 <b>Отслеживаемые валюты</b>\n\nСписок пуст.\n\nДобавить: <code>/track USD</code>`
+        );
+        return;
+      }
+
+      const data = await getRates("USD", env);
+
+      let message = `📊 <b>Отслеживаемые валюты</b>\n\n`;
+
+      for (const currency of tracked) {
+        const rate = data.conversion_rates[currency];
+
+        if (rate !== undefined) {
+          message += `• <b>${currency}</b>: ${rate.toFixed(4)} USD\n`;
+        }
+      }
+
       await sendMessage(
         env.BOT_TOKEN,
         chatId,
-        `📊 <b>Отслеживаемые валюты</b>\n\nСписок пуст.\n\nДобавить валюту: <code>/track USD</code>`
+        message
       );
 
-      return;
+    } catch (error) {
+      console.error("TRACK LIST ERROR:", error);
+
+      await sendMessage(
+        env.BOT_TOKEN,
+        chatId,
+        "❌ Не удалось получить список валют."
+      );
     }
-
-    let message = `📊 <b>Отслеживаемые валюты</b>\n\n`;
-
-    for (const currency of tracked) {
-      message += `• ${currency}\n`;
-    }
-
-    await sendMessage(
-      env.BOT_TOKEN,
-      chatId,
-      message
-    );
 
     return;
   }
+
 
 
   if (parts.length === 2) {
@@ -190,7 +207,6 @@ async function handleTrack(chatId, text, env) {
           chatId,
           `❌ Валюта <b>${currency}</b> не найдена.`
         );
-
         return;
       }
 
@@ -202,7 +218,6 @@ async function handleTrack(chatId, text, env) {
           chatId,
           `ℹ️ <b>${currency}</b> уже отслеживается.`
         );
-
         return;
       }
 
@@ -220,23 +235,68 @@ async function handleTrack(chatId, text, env) {
       );
 
     } catch (error) {
-      console.error("TRACK ERROR:", error);
+      console.error("TRACK ADD ERROR:", error);
 
       await sendMessage(
         env.BOT_TOKEN,
         chatId,
-        "❌ Не удалось проверить валюту."
+        "❌ Не удалось добавить валюту."
       );
     }
 
     return;
   }
+}
+async function handleUntrack(chatId, text, env) {
+  const parts = text.trim().split(/\s+/);
 
-  // Неправильное использование
+  if (parts.length !== 2) {
+    await sendMessage(
+      env.BOT_TOKEN,
+      chatId,
+      `<b>Использование:</b>\n<code>/untrack USD</code>`
+    );
+    return;
+  }
+
+  const currency = parts[1].toUpperCase();
+
+  const tracked = await getTracked(chatId, env);
+
+  if (!tracked.includes(currency)) {
+    await sendMessage(
+      env.BOT_TOKEN,
+      chatId,
+      `ℹ️ <b>${currency}</b> не найдена в списке.`
+    );
+    return;
+  }
+
+  const updated = tracked.filter(
+    item => item !== currency
+  );
+
+  await env.CURRENCY_KV.put(
+    String(chatId),
+    JSON.stringify(updated)
+  );
+
   await sendMessage(
     env.BOT_TOKEN,
     chatId,
-    `<b>Использование:</b>\n<code>/track</code> — список\n<code>/track USD</code> — добавить валюту`
+    `✓ <b>${currency}</b> удалена из отслеживания.`
+  );
+}
+async function handleUnsubscribe(chatId, env) {
+
+  await env.CURRENCY_KV.delete(
+    String(chatId)
+  );
+
+  await sendMessage(
+    env.BOT_TOKEN,
+    chatId,
+    "✓ Все отслеживаемые валюты удалены."
   );
 }
 async function sendMessage(token, chatId, text) {
@@ -305,7 +365,20 @@ export default{
     env
   );
     }
-  
+  else if (text.startsWith("/untrack")) {
+  await handleUntrack(
+    chatId,
+    text,
+    env
+  );
+}
+
+else if (text === "/unsubscribe") {
+  await handleUnsubscribe(
+    chatId,
+    env
+  );
+}
     return new Response ("OK");
   }
 };
