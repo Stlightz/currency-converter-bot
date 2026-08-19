@@ -39,7 +39,7 @@ export default{
       return new Response("OK");
     }
     if(text === "/start"){
-      await sendMessage(env.BOT_TOKEN, chatId, greeting);
+      await sendMessage(env.BOT_TOKEN, chatId, greeting, {parse_mode: "HTML"});
     }
     return new Response ("OK");
   }
