@@ -195,7 +195,7 @@ export default{
   await handleConvert(chatId, text, env);
     }
     else if (text.startsWith("/table")){
-  await handleTable(from,env);
+  await handleTable(chatId,env);
    }
   
     return new Response ("OK");
