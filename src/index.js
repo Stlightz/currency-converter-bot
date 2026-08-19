@@ -15,7 +15,14 @@ async function sendMessage(token, chatId, text){
   return response.json();
 }
 
-
+const greeting = 
+  <b> Greetings! </b>
+  
+  <b> C2C Bot - is your main helper in instantaneous currency convertations </b>
+- Helps you track changes on the currency market
+- Reliable currency calculator
+- A useful tool in life and for business;
+  
 
 export default{
   async fetch(request, env){
@@ -24,6 +31,7 @@ export default{
   }
     const update = await request.json();
     console.log(update);
+    
 
     const chatId = update.message?.chat?.id;
     const text = update.message?.text;
@@ -31,7 +39,7 @@ export default{
       return new Response("OK");
     }
     if(text === "/start"){
-      await sendMessage(env.BOT_TOKEN, chatId, "Прив");
+      await sendMessage(env.BOT_TOKEN, chatId, greeting);
     }
     return new Response ("OK");
   }
