@@ -8,7 +8,7 @@ async function sendMessage(token, chatId, text){
     body: JSON.stringify({
       chat_id: chatId,
       text: text
-      parse_mode: "HTML" 
+      parse_mode: "HTML"
     })
   });
   if(!response.ok){
