@@ -37,12 +37,62 @@ async function getRates(base, env) {
 function getCurrencyEmoji(currency) {
 
   const flags = {
-    USD: "🇺🇸",
-    EUR: "🇪🇺",
-    RUB: "🇷🇺",
-    GBP: "🇬🇧",
-    JPY: "🇯🇵",
-    CNY: "🇨🇳"
+    // Северная Америка
+    USD: "🇺🇸", // США
+    CAD: "🇨🇦", // Канада
+    MXN: "🇲🇽", // Мексика
+
+    // Европа
+    EUR: "🇪🇺", // Евро
+    GBP: "🇬🇧", // Великобритания
+    CHF: "🇨🇭", // Швейцария
+    RUB: "🇷🇺", // Россия
+    PLN: "🇵🇱", // Польша
+    SEK: "🇸🇪", // Швеция
+    NOK: "🇳🇴", // Норвегия
+    DKK: "🇩🇰", // Дания
+    CZK: "🇨🇿", // Чехия
+    HUF: "🇭🇺", // Венгрия
+    RON: "🇷🇴", // Румыния
+    TRY: "🇹🇷", // Турция
+    UAH: "🇺🇦", // Украина
+
+    // Азия
+    JPY: "🇯🇵", // Япония
+    CNY: "🇨🇳", // Китай
+    HKD: "🇭🇰", // Гонконг
+    SGD: "🇸🇬", // Сингапур
+    KRW: "🇰🇷", // Южная Корея
+    INR: "🇮🇳", // Индия
+    IDR: "🇮🇩", // Индонезия
+    MYR: "🇲🇾", // Малайзия
+    THB: "🇹🇭", // Таиланд
+    VND: "🇻🇳", // Вьетнам
+    PHP: "🇵🇭", // Филиппины
+    AED: "🇦🇪", // ОАЭ
+    SAR: "🇸🇦", // Саудовская Аравия
+    ILS: "🇮🇱", // Израиль
+
+    // Океания
+    AUD: "🇦🇺", // Австралия
+    NZD: "🇳🇿", // Новая Зеландия
+
+    // Южная Америка
+    BRL: "🇧🇷", // Бразилия
+    ARS: "🇦🇷", // Аргентина
+    CLP: "🇨🇱", // Чили
+    COP: "🇨🇴", // Колумбия
+
+    // Африка
+    ZAR: "🇿🇦", // ЮАР
+    EGP: "🇪🇬", // Египет
+    NGN: "🇳🇬", // Нигерия
+    KES: "🇰🇪", // Кения
+    MAD: "🇲🇦", // Марокко
+
+    // Крипто (если потом добавишь)
+    BTC: "₿",
+    ETH: "Ξ"
   };
 
   return flags[currency] || "💱";
@@ -99,7 +149,7 @@ async function handleConvert(chatId, text, env) {
     const message = `
 <b>💱 Конвертация</b>
 
-<b>${amount} ${from}</b> → <b>${formattedResult} ${to}</b>
+<b>${amount} ${from}</b> ${getCurrencyEmoji(currency)} → <b>${formattedResult} ${getCurrencyEmoji(currency)} ${to}</b>
 
 Курс:
 1 ${from} = ${formattedRate} ${to}
@@ -281,7 +331,7 @@ async function handleTrack(chatId, text, env) {
       await sendMessage(
         env.BOT_TOKEN,
         chatId,
-        `✓ <b>${currency}</b> добавлен в отслеживание.`
+        `✓ ${getCurrencyEmoji(currency)} <b>${currency}</b> добавлен в отслеживание.`
       );
 
     } catch (error) {
@@ -317,7 +367,7 @@ async function handleUntrack(chatId, text, env) {
     await sendMessage(
       env.BOT_TOKEN,
       chatId,
-      `ℹ️ <b>${currency}</b> не найдена в списке.`
+      `ℹ️ ${getCurrencyEmoji(currency)} <b>${currency}</b> не найдена в списке.`
     );
     return;
   }
@@ -334,7 +384,7 @@ async function handleUntrack(chatId, text, env) {
   await sendMessage(
     env.BOT_TOKEN,
     chatId,
-    `✓ <b>${currency}</b> удалена из отслеживания.`
+    `✓ ${getCurrencyEmoji(currency)} <b>${currency}</b> удалена из отслеживания.`
   );
 }
 async function handleUnsubscribe(chatId, env) {
@@ -430,7 +480,7 @@ async function sendCurrencyUpdate(chatId, env) {
     if (!oldRates[currency]) {
 
       message +=
-        `${currency}: ${current.toFixed(4)}\n`;
+        `${getCurrencyEmoji(currency)} ${currency}: ${current.toFixed(4)}\n`;
 
       continue;
     }
@@ -453,7 +503,7 @@ async function sendCurrencyUpdate(chatId, env) {
 
 
     message +=
-      `<b>${currency}</b>: ${current.toFixed(4)} ${icon} ${change.toFixed(2)}%\n`;
+      `${getCurrencyEmoji(currency)} <b>${currency}</b>: ${current.toFixed(4)} ${icon} ${change.toFixed(2)}%\n`;
   }
 
 
