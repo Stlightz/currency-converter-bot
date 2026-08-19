@@ -207,6 +207,7 @@ async function handleTrack(chatId, text, env) {
       "❌ Не удалось проверить валюту."
     );
   }
+}
 
 async function sendMessage(token, chatId, text) {
   const url =
