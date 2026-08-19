@@ -195,7 +195,7 @@ export default{
   await handleConvert(chatId, text, env);
     }
     else if (text.startsWith("/table")){
-  await getRates(from,enc);
+  await handleTable(from,env);
     return new Response ("OK");
   }
 };
