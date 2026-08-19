@@ -196,6 +196,8 @@ export default{
     }
     else if (text.startsWith("/table")){
   await handleTable(from,env);
+   }
+  
     return new Response ("OK");
   }
 };
