@@ -91,6 +91,26 @@ async function handleConvert(chatId, text, env) {
     );
   }
 }
+async function getUsers(env) {
+  const users = await env.CURRENCY_KV.get(
+    "users",
+    "json"
+  );
+
+  return users || [];
+}
+async function registerUser(chatId, env) {
+  const users = await getUsers(env);
+
+  if (!users.includes(chatId)) {
+    users.push(chatId);
+
+    await env.CURRENCY_KV.put(
+      "users",
+      JSON.stringify(users)
+    );
+  }
+}
 
 async function handleTable(chatId, env) {
   const currencies = [
@@ -299,6 +319,22 @@ async function handleUnsubscribe(chatId, env) {
     "✓ Все отслеживаемые валюты удалены."
   );
 }
+async function getLastRates(chatId, env) {
+  const rates = await env.CURRENCY_KV.get(
+    `rates:${chatId}`,
+    "json"
+  );
+
+  return rates || {};
+}
+
+
+async function saveLastRates(chatId, rates, env) {
+  await env.CURRENCY_KV.put(
+    `rates:${chatId}`,
+    JSON.stringify(rates)
+  );
+}
 async function sendMessage(token, chatId, text) {
   const url =
     `https://api.telegram.org/bot${token}/sendMessage`;
@@ -325,6 +361,85 @@ async function sendMessage(token, chatId, text) {
 
   return response.json();
 }
+async function sendCurrencyUpdate(chatId, env) {
+
+  const tracked = await getTracked(chatId, env);
+
+  if (tracked.length === 0) {
+    return;
+  }
+
+
+  const data = await getRates("USD", env);
+
+  const oldRates = await getLastRates(
+    chatId,
+    env
+  );
+
+
+  let message = `<b>📊 Изменение курсов</b>\n\n`;
+
+  const newRates = {};
+
+
+  for (const currency of tracked) {
+
+    const current =
+      data.conversion_rates[currency];
+
+
+    if (!current) {
+      continue;
+    }
+
+
+    newRates[currency] = current;
+
+
+    if (!oldRates[currency]) {
+
+      message +=
+        `${currency}: ${current.toFixed(4)}\n`;
+
+      continue;
+    }
+
+
+    const change =
+      ((current - oldRates[currency])
+      / oldRates[currency]) * 100;
+
+
+    let icon = "➡️";
+
+    if (change > 0) {
+      icon = "📈";
+    }
+
+    if (change < 0) {
+      icon = "📉";
+    }
+
+
+    message +=
+      `<b>${currency}</b>: ${current.toFixed(4)} ${icon} ${change.toFixed(2)}%\n`;
+  }
+
+
+  await saveLastRates(
+    chatId,
+    newRates,
+    env
+  );
+
+
+  await sendMessage(
+    env.BOT_TOKEN,
+    chatId,
+    message
+  );
+}
 const greeting = 
   `<b> Greetings! </b>
   
@@ -339,6 +454,11 @@ export default{
     if(request.method !== "POST"){
     return new Response("Cb s alive");
   }
+
+    if(!chatId || !text){
+    return new Response("OK");
+    }
+    await registerUser(chatId, env);
     const update = await request.json();
     console.log(update);
     
@@ -381,4 +501,32 @@ else if (text === "/unsubscribe") {
 }
     return new Response ("OK");
   }
+  async scheduled(event, env, ctx) {
+
+    const users = await getUsers(env);
+
+
+    for (const chatId of users) {
+
+      try {
+
+        await sendCurrencyUpdate(
+          chatId,
+          env
+        );
+
+      } catch(error) {
+
+        console.error(
+          "SEND ERROR:",
+          chatId,
+          error
+        );
+
+      }
+
+    }
+
+  }
+
 };
