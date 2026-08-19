@@ -1,3 +1,21 @@
+const currencyFlags = {
+  RUB:{
+    emoji: "🇷🇺",
+    id: "5913274246867456342"
+  },
+  USD:{
+    emoji: "🇺🇸",
+    id: "5913463998522592692"
+  },
+  EUR:{
+    emoji: "🇪🇺",
+    id: "5911106310585193018"
+  },
+  GBP:{
+    emoji: "🇬🇧",
+    id: "5913443365499703513"
+  }
+}
 async function getRates(base, env) {
   const url =
     `https://v6.exchangerate-api.com/v6/${env.EXCHANGE_API_KEY}/latest/${base}`;
@@ -16,7 +34,19 @@ async function getRates(base, env) {
 
   return data;
 }
+function getCurrencyEmoji(currency) {
 
+  const flags = {
+    USD: "🇺🇸",
+    EUR: "🇪🇺",
+    RUB: "🇷🇺",
+    GBP: "🇬🇧",
+    JPY: "🇯🇵",
+    CNY: "🇨🇳"
+  };
+
+  return flags[currency] || "💱";
+}
 async function handleConvert(chatId, text, env) {
   const parts = text.trim().split(/\s+/);
 
@@ -136,7 +166,7 @@ async function handleTable(chatId, env) {
       const rate = data.conversion_rates[currency];
 
       if (rate !== undefined) {
-        message += `${currency}: ${rate.toFixed(4)}\n`;
+        message += `${getCurrencyEmoji(currency)} ${currency}: ${rate.toFixed(4)}\n`;
       }
     }
 
@@ -190,7 +220,7 @@ async function handleTrack(chatId, text, env) {
         const rate = data.conversion_rates[currency];
 
         if (rate !== undefined) {
-          message += `• <b>${currency}</b>: ${rate.toFixed(4)} USD\n`;
+          message += `• ${getCurrencyEmoji(currency)} <b>${currency}</b>: ${rate.toFixed(4)} USD\n`;
         }
       }
 
