@@ -532,16 +532,14 @@ const greeting =
 - Reliable currency calculator
 - A useful tool in life and for business
 
-<blockquote expandable>
-Основные команды:
+<b>Основные команды:</b>
 
-/convert - ручная конвертация
-/table - обзор мировых валют
-/track &lt;currency&gt; - начать отслеживать курс валюты
-/untrack &lt;currency&gt; - прекратить отслеживать курс валюты
-/unsubscribe - полностью отписаться от рассылок 
-/track - отслеживаемые валюты
-</blockquote expandable>`;
+<code>/convert</code> — ручная конвертация
+<code>/table</code> — обзор валют
+<code>/track USD</code> — добавить валюту
+<code>/track</code> — список отслеживания
+<code>/untrack USD</code> — удалить валюту
+<code>/unsubscribe</code> — отключить рассылку`;
   
 
 export default {
