@@ -524,21 +524,24 @@ async function sendCurrencyUpdate(chatId, env) {
   );
 }
 const greeting = 
-  `<b> Greetings! </b>
-  
-  <b> C2C Bot - is your main helper in instant currency conversions </b>
-  
+`<b> Greetings! </b>
+
+<b> C2C Bot - is your main helper in instant currency conversions </b>
+
 - Helps you track changes on the currency market
 - Reliable currency calculator
 - A useful tool in life and for business
-  
-  <code> Основные команды:
+
+<code>
+Основные команды:
+
 /convert - ручная конвертация
 /table - обзор мировых валют
-/track <currency> - начать отслеживать курс валюты
-/untrack <currency> - прекратить отслеживать курс валюты
-/unsubscribe - отписаться от рассылок полностью
-/track - отслеживаемые валюты</code>`;
+/track &lt;currency&gt; - начать отслеживать курс валюты
+/untrack &lt;currency&gt; - прекратить отслеживать курс валюты
+/unsubscribe - полностью отписаться от рассылок 
+/track - отслеживаемые валюты
+</code>`;
   
 
 export default {
