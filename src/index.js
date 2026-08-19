@@ -137,7 +137,76 @@ async function handleTable(chatId, env) {
   }
 }
 
+async function getTracked(chatId, env) {
+  const tracked = await env.CURRENCY_KV.get(
+    String(chatId),
+    "json"
+  );
 
+  return tracked || [];
+}
+async function handleTrack(chatId, text, env) {
+  const parts = text.trim().split(/\s+/);
+
+  if (parts.length !== 2) {
+    await sendMessage(
+      env.BOT_TOKEN,
+      chatId,
+      `<b>Использование:</b>\n<code>/track USD</code>`
+    );
+
+    return;
+  }
+
+  const currency = parts[1].toUpperCase();
+
+  try {
+    const data = await getRates("USD", env);
+
+    if (!(currency in data.conversion_rates)) {
+      await sendMessage(
+        env.BOT_TOKEN,
+        chatId,
+        `❌ Валюта <b>${currency}</b> не найдена.`
+      );
+
+      return;
+    }
+
+    const tracked = await getTracked(chatId, env);
+
+    if (tracked.includes(currency)) {
+      await sendMessage(
+        env.BOT_TOKEN,
+        chatId,
+        `ℹ️ <b>${currency}</b> уже отслеживается.`
+      );
+
+      return;
+    }
+
+    tracked.push(currency);
+
+    await env.CURRENCY_KV.put(
+      String(chatId),
+      JSON.stringify(tracked)
+    );
+
+    await sendMessage(
+      env.BOT_TOKEN,
+      chatId,
+      `✓ <b>${currency}</b> добавлен в отслеживание.`
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    await sendMessage(
+      env.BOT_TOKEN,
+      chatId,
+      "❌ Не удалось проверить валюту."
+    );
+  }
 
 async function sendMessage(token, chatId, text) {
   const url =
@@ -197,6 +266,14 @@ export default{
     else if (text.startsWith("/table")){
   await handleTable(chatId,env);
    }
+    else if (text.startsWith("/track")) {
+
+  await handleTrack(
+    chatId,
+    text,
+    env
+  );
+    }
   
     return new Response ("OK");
   }
