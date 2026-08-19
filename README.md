@@ -1,62 +1,48 @@
+# 💱 C2C — Currency Converter
 
-# 💱 Telegram Currency Bot
+A Telegram bot for currency conversion and exchange rate tracking.
 
-> Быстрый Telegram-бот для конвертации валют прямо в чате.
+[ Telegram Bot ]  [ Releases / Demo ]
 
-## 📌 О проекте
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Telegram Currency Bot** — это простой серверless-бот для Telegram, который позволяет быстро узнать стоимость одной валюты в другой.
+📸 SCREENSHOT / GIF
 
-Бот работает на **Cloudflare Workers**, использует **Telegram Bot API** и получает актуальные курсы валют через API внешнего сервиса.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### ✨ Возможности
+## ✨ Features
 
-- 💱 Конвертация валют
-- 🌍 Поддержка различных валют
-- ⚡ Быстрые ответы
-- ☁️ Работа на Cloudflare Workers
-- 🔐 Безопасное хранение API-ключей
-- 📦 Минимальная серверная инфраструктура
-- 🐙 Исходный код доступен на GitHub
+• Currency conversion
+• Global currency table
+• Exchange rate tracking
+• API integration
+• Telegram commands
+• Error handling
+
+## 🛠️ Tech Stack
+
+JavaScript
+Cloudflare Workers
+Telegram Bot API
+Exchange Rate API
+
+## 📋 Commands
+
+/convert — convert currencies
+/table — view currency rates
+/track — track an exchange rate
+/help — show available commands
+
+## ⚙️ Architecture
+
+Telegram
+   ↓
+Cloudflare Worker
+   ↓
+Currency API
+   ↓
+Response
 
 ---
 
-## 🏗️ Архитектура
-
-```text
-┌──────────────┐
-│  Пользователь│
-└──────┬───────┘
-       │
-       │ /convert 100 USD EUR
-       ▼
-┌──────────────┐
-│   Telegram   │
-└──────┬───────┘
-       │
-       │ Webhook
-       ▼
-┌────────────────────┐
-│ Cloudflare Worker  │
-│                    │
-│ • Обработка команды│
-│ • Получение курса  │
-│ • Расчёт           │
-└─────────┬──────────┘
-          │
-          │ HTTPS API
-          ▼
-┌────────────────────┐
-│ Currency API       │
-└────────────────────┘
-          │
-          ▼
-     Курс валюты
-          │
-          ▼
-┌────────────────────┐
-│ Telegram Bot API   │
-└─────────┬──────────┘
-          │
-          ▼
-     Пользователь
+##
