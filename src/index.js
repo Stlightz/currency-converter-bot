@@ -449,84 +449,89 @@ const greeting =
 - A useful tool in life and for business`;
   
 
-export default{
-  async fetch(request, env){
-    if(request.method !== "POST"){
-    return new Response("Cb s alive");
-  }
+export default {
+  async fetch(request, env) {
 
-    if(!chatId || !text){
-    return new Response("OK");
+    if (request.method !== "POST") {
+      return new Response("Cb s alive");
     }
-    await registerUser(chatId, env);
+
     const update = await request.json();
     console.log(update);
-    
 
     const chatId = update.message?.chat?.id;
     const text = update.message?.text;
-    if(!chatId || !text){
+
+    if (!chatId || !text) {
       return new Response("OK");
     }
-    if(text === "/start"){
-      await sendMessage(env.BOT_TOKEN, chatId, greeting);
-    }
-    else if (text.startsWith("/convert")) {
-  await handleConvert(chatId, text, env);
-    }
-    else if (text.startsWith("/table")){
-  await handleTable(chatId,env);
-   }
-    else if (text.startsWith("/track")) {
 
-  await handleTrack(
-    chatId,
-    text,
-    env
-  );
-    }
-  else if (text.startsWith("/untrack")) {
-  await handleUntrack(
-    chatId,
-    text,
-    env
-  );
-}
+    await registerUser(chatId, env);
 
-else if (text === "/unsubscribe") {
-  await handleUnsubscribe(
-    chatId,
-    env
-  );
-}
-    return new Response ("OK");
-  }
+    if (text === "/start") {
+      await sendMessage(
+        env.BOT_TOKEN,
+        chatId,
+        greeting
+      );
+
+    } else if (text.startsWith("/convert")) {
+      await handleConvert(
+        chatId,
+        text,
+        env
+      );
+
+    } else if (text === "/table") {
+      await handleTable(
+        chatId,
+        env
+      );
+
+    } else if (text.startsWith("/track")) {
+      await handleTrack(
+        chatId,
+        text,
+        env
+      );
+
+    } else if (text.startsWith("/untrack")) {
+      await handleUntrack(
+        chatId,
+        text,
+        env
+      );
+
+    } else if (text === "/unsubscribe") {
+      await handleUnsubscribe(
+        chatId,
+        env
+      );
+    }
+
+    return new Response("OK");
+  },
+
+
   async scheduled(event, env, ctx) {
 
     const users = await getUsers(env);
 
-
     for (const chatId of users) {
-
       try {
-
         await sendCurrencyUpdate(
           chatId,
           env
         );
 
       } catch(error) {
-
         console.error(
           "SEND ERROR:",
           chatId,
           error
         );
-
       }
-
     }
 
   }
-
 };
