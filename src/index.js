@@ -191,6 +191,9 @@ export default{
     if(text === "/start"){
       await sendMessage(env.BOT_TOKEN, chatId, greeting);
     }
+    else if (text.startsWith("/convert")) {
+  await handleConvert(chatId, text, env);
+    }
     return new Response ("OK");
   }
 };
