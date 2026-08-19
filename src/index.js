@@ -532,7 +532,7 @@ const greeting =
 - Reliable currency calculator
 - A useful tool in life and for business
 
-<code>
+<blockquote expandable>
 Основные команды:
 
 /convert - ручная конвертация
@@ -541,7 +541,7 @@ const greeting =
 /untrack &lt;currency&gt; - прекратить отслеживать курс валюты
 /unsubscribe - полностью отписаться от рассылок 
 /track - отслеживаемые валюты
-</code>`;
+</blockquote expandable>`;
   
 
 export default {
