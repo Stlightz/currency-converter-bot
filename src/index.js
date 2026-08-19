@@ -16,12 +16,12 @@ async function sendMessage(token, chatId, text){
 }
 
 const greeting = 
-  <b> Greetings! </b>
+  `<b> Greetings! </b>
   
   <b> C2C Bot - is your main helper in instantaneous currency convertations </b>
 - Helps you track changes on the currency market
 - Reliable currency calculator
-- A useful tool in life and for business;
+- A useful tool in life and for business`;
   
 
 export default{
