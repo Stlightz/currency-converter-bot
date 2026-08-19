@@ -2,11 +2,11 @@
 
 A Telegram bot for currency conversion and exchange rate tracking.
 
-[ Telegram Bot ]  [ Releases / Demo ]
+@Currency2currencybot
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📸 SCREENSHOT / GIF
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
