@@ -8,7 +8,7 @@
     "crons": [
       "0 * * * *"
     ]
-  }
+  },
 "kv_namespaces":[{
 "binding" : "CURRENCY_KV",
 "id" : "8aabfff897404a26bc1f363047774f48"
