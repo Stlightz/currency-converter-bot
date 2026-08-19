@@ -10,7 +10,7 @@ async function sendMessage(token, chatId, text){
       text: text})
   });
   if(!response.ok){
-    throw new ERROR(`Telegram API error: ${response.status}`);
+    throw new Error(`Telegram API error: ${response.status}`);
   }
   return response.json();
 }
