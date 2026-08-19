@@ -90,7 +90,7 @@ function getCurrencyEmoji(currency) {
     KES: "🇰🇪", // Кения
     MAD: "🇲🇦", // Марокко
 
-    // Крипто (если потом добавишь)
+    // Крипто 
     BTC: "₿",
     ETH: "Ξ"
   };
