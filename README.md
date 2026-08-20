@@ -6,6 +6,7 @@ A Telegram bot for currency conversion and exchange rate tracking.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+<img width="1254" height="1254" alt="bot-image" src="https://github.com/user-attachments/assets/0129d707-9439-45d2-bc15-c554aad51dfa" />
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
